@@ -4,8 +4,14 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/mx4"
-        android:scaleType="fitXY"/>
+        android:src="@drawable/rainy"
+        android:scaleType="fitXY"
+        android:id="@+id/weather_bg1"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@color/green1"
+        android:id="@+id/weather_bg2"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -75,4 +81,5 @@
                 android:text="fsfdsfsd"/>
         </LinearLayout>
     </ScrollView>
+    <include layout="@layout/testbutton_layout"/>
 </FrameLayout>
