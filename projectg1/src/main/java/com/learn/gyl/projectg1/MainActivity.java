@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,11 +19,17 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.learn.gyl.projectg1.bean.Result;
+import com.learn.gyl.projectg1.presenter.TestPresenter;
+import com.learn.gyl.projectg1.view.IMainView;
+
 import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
-public class MainActivity extends BaseActivity {
+import java.io.IOException;
+
+public class MainActivity extends BaseActivity implements IMainView {
     Handler handler = new Handler();
     @ViewInject(R.id.weather_bg2)
     private ImageView imageView;
@@ -32,28 +39,25 @@ public class MainActivity extends BaseActivity {
     private AppCompatButton testButton2;
     @ViewInject(R.id.testTextView)
     private TextView textView;
-    private int i = 100;
+    private TestPresenter testPresenter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.frame_test_layout);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         x.view().inject(this);
-        imageView.setAlpha(100);
-
+        imageView.setAlpha(180);
+        testPresenter = new TestPresenter(this);
+        testPresenter.testMethod();
+        try {
+            Log.d("xyz", getAssets().open("Provinces.xml").toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    @Event(value = {R.id.testButton1,R.id.testButton2})
-    private void changeAlpha(View v) {
-        switch (v.getId()){
-            case R.id.testButton1:i++;
-                imageView.setAlpha(i);
-                textView.setText(i + "");
-                break;
-            case R.id.testButton2:i--;
-                imageView.setAlpha(i);
-                textView.setText(i + "");
-                break;
-        }
+    @Override
+    public void updateWeather(Result result) {
+
     }
 }
