@@ -19,7 +19,9 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.learn.gyl.projectg1.bean.City;
 import com.learn.gyl.projectg1.bean.Result;
+import com.learn.gyl.projectg1.model.ProvinceXmlParse;
 import com.learn.gyl.projectg1.presenter.TestPresenter;
 import com.learn.gyl.projectg1.view.IMainView;
 
@@ -27,7 +29,10 @@ import org.xutils.view.annotation.Event;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
 
 public class MainActivity extends BaseActivity implements IMainView {
     Handler handler = new Handler();
@@ -50,10 +55,15 @@ public class MainActivity extends BaseActivity implements IMainView {
         testPresenter = new TestPresenter(this);
         testPresenter.testMethod();
         try {
-            Log.d("xyz", getAssets().open("Provinces.xml").toString());
+            Log.d("xyz", new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("assets/" + "Provinces.xml"))).readLine());
         } catch (IOException e) {
             e.printStackTrace();
         }
+        ProvinceXmlParse provinceXmlParse = new ProvinceXmlParse();
+        List<City> list = provinceXmlParse.parse(this.getClass().getClassLoader().getResourceAsStream("assets/" + "Provinces.xml"));
+//        for (City city:list){
+//            Log.d("xyz",city.toString());
+//        }
     }
 
     @Override

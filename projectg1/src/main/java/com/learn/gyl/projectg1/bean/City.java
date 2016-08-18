@@ -31,4 +31,13 @@ public class City {
     public void setProvinceName(String provinceName) {
         this.provinceName = provinceName;
     }
+
+    @Override
+    public String toString() {
+        return "City{" +
+                "cityName='" + cityName + '\'' +
+                ", id=" + id +
+                ", provinceName='" + provinceName + '\'' +
+                '}';
+    }
 }
