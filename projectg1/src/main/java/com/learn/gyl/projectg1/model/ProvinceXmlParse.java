@@ -3,6 +3,9 @@ package com.learn.gyl.projectg1.model;
 import android.util.Log;
 
 import com.learn.gyl.projectg1.bean.City;
+import com.learn.gyl.projectg1.bean.Province;
+import com.learn.gyl.projectg1.db.CityDB;
+import com.learn.gyl.projectg1.db.ProvinceDB;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -17,9 +20,12 @@ import java.util.List;
  * Created by yl on 2016/8/19.
  */
 public class ProvinceXmlParse {
+    CityDB cityDB = null;
+    ProvinceDB provinceDB = null;
     public List<City> parse(InputStream inputStream){
         List<City> list = null;
         City city = null;
+        Province province = null;
         //创建并初始化City对象和装载City对象的List
         try {
             XmlPullParser xmlPullParser = XmlPullParserFactory.newInstance().newPullParser();
@@ -31,34 +37,34 @@ public class ProvinceXmlParse {
                 switch (eventType){
                     case XmlPullParser.START_DOCUMENT:      //判断当前事件是否是文档开始事件
                         list = new ArrayList<City>();         //初始化list
-                        Log.d("xyz","开始事件");
+                        cityDB = new CityDB();              //初始化CityDB
+                        provinceDB = new ProvinceDB();
                         break;
                     case XmlPullParser.START_TAG:           //判断当前事件是否是标签元素开始事件
                         if ("province".equals(xmlPullParser.getName())){
                             city = new City();
+                            province = new Province();
                             if(xmlPullParser.getAttributeValue(0)!=null) {
                                 city.setProvinceName(xmlPullParser.getAttributeValue(0));
+                                province.setProvinceName(xmlPullParser.getAttributeValue(0));
                             }
-                            Log.d("xyz","province succeed");
                         }
                         while ("item".equals(xmlPullParser.getName())){
                             eventType = xmlPullParser.next();
                             if (xmlPullParser.getText()!=null){
                                 city.setCityName(xmlPullParser.getText());
+                                cityDB.saveCity(city);
+                                provinceDB.saveProvince(province);
                                 list.add(city);
                             }
-                            Log.d("xyz","item succeed");
-                            Log.d("xyz",city.toString());
                         }
                         break;
                     case XmlPullParser.END_TAG:             //判断当前事件是否是标签元素结束事件
                         if ("province".equals(xmlPullParser.getName())){
                             city = null;
-                            Log.d("xyz","结束事件");
                         }
                         break;
                 }
-                Log.d("xyz","this event succeed");
                 eventType = xmlPullParser.next();
                 //进入下一个事件
             }
@@ -67,6 +73,7 @@ public class ProvinceXmlParse {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Log.d("xmlparse","parse succeed!");
         return list;
     }
 }

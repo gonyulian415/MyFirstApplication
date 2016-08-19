@@ -1,12 +1,27 @@
 package com.learn.gyl.projectg1.bean;
 
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+
 /**
  * Created by admin on 2016/8/18.
  */
+@Table(name = "City")
 public class City {
+    @Column(name = "id",isId = true)
     private int id;
+    @Column(name = "cityName")
     private String cityName;
+    @Column(name = "provinceName")
     private String provinceName;
+
+    public City() {
+    }
+
+    public City(String cityName, String provinceName) {
+        this.cityName = cityName;
+        this.provinceName = provinceName;
+    }
 
     public String getCityName() {
         return cityName;

@@ -54,16 +54,7 @@ public class MainActivity extends BaseActivity implements IMainView {
         imageView.setAlpha(180);
         testPresenter = new TestPresenter(this);
         testPresenter.testMethod();
-        try {
-            Log.d("xyz", new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("assets/" + "Provinces.xml"))).readLine());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ProvinceXmlParse provinceXmlParse = new ProvinceXmlParse();
-        List<City> list = provinceXmlParse.parse(this.getClass().getClassLoader().getResourceAsStream("assets/" + "Provinces.xml"));
-//        for (City city:list){
-//            Log.d("xyz",city.toString());
-//        }
+
     }
 
     @Override
