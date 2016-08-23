@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.learn.gyl.projectg1.bean.City;
 import com.learn.gyl.projectg1.bean.Result;
 import com.learn.gyl.projectg1.bean.WeatherIfo;
+import com.learn.gyl.projectg1.bean.WeatherIfoBean;
 import com.learn.gyl.projectg1.model.ProvinceXmlParse;
 import com.learn.gyl.projectg1.presenter.MainPresenter;
 import com.learn.gyl.projectg1.presenter.TestPresenter;
@@ -54,7 +55,7 @@ public class MainActivity extends BaseActivity implements IMainView {
     private ImageView iv2;              //主界面天气背景图
     private TestPresenter testPresenter;
     private MainPresenter mainPresenter = new MainPresenter(this);
-    private Map<String,Result> map;
+    private WeatherIfoBean weatherIfoBean;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,23 +63,14 @@ public class MainActivity extends BaseActivity implements IMainView {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         x.view().inject(this);
         drawerLayout.setScrimColor(Color.TRANSPARENT);
-        map = new HashMap<String,Result>();
-        map = mainPresenter.initWeatherIfo();     //初始化,返回resultMap<城市名,天气查询结果>
-        updateWeather(map);
+        mainPresenter.initWeatherIfo();
     }
 
     @Override
-    public void updateWeather(Map<String,Result> result) {
-        if (result.size() == 1){    //只有一对时直接更新主界面天气
-            Log.d("xyz","主天气");
-            for (String s : result.keySet()){
-                WeatherIfo weatherIfo = WeatherParseUtil.weatherParse(Integer.parseInt(result.get(s).getResults().get(0).getNow().getCode()));
-                iv1.setImageResource(weatherIfo.getMian_text());
-                iv2.setImageResource(weatherIfo.getMain_bg());
-                tv1.setText(s);
-            }
-        }else{
-
-        }
+    public void updateWeather(WeatherIfoBean weatherIfoBean) {
+        WeatherIfo weatherIfo = WeatherParseUtil.weatherParse(Integer.parseInt(weatherIfoBean.getCode()));
+        tv1.setText(weatherIfoBean.getPosition());
+        iv1.setImageResource(weatherIfo.getMian_text());
+        iv2.setImageResource(weatherIfo.getMain_bg());
     }
 }

@@ -5,18 +5,15 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.learn.gyl.projectg1.bean.Result;
 import com.learn.gyl.projectg1.bean.UserPosition;
-import com.learn.gyl.projectg1.bean.WeatherIfo;
+import com.learn.gyl.projectg1.bean.WeatherIfoBean;
 import com.learn.gyl.projectg1.db.LocalPositionDB;
-import com.learn.gyl.projectg1.net.IGetResult;
+import com.learn.gyl.projectg1.db.WeatherIfoBeanDB;
 import com.learn.gyl.projectg1.utils.XHttpUtils;
 import com.learn.gyl.projectg1.view.IMainView;
 
 import org.xutils.common.Callback;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by yl on 2016/8/21.
@@ -29,27 +26,31 @@ public class MainPresenter{
     public MainPresenter(IMainView iMainView) {
         this.iMainView = iMainView;
     }
-    public Result requestWeatherData(String cityName){
-        final List<Result> list = new ArrayList<Result>();
-        final Gson gson = new Gson();
+    public void requestWeatherData(final String cityName){
         url.append("&location=" + cityName);
-        Log.d("xyz", url.toString());
+        Log.d("xyz",url.toString());
         XHttpUtils.requestData(url.toString(), new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String s) {
-                Result r = gson.fromJson(s, Result.class);
-                Log.d("xyz", r.toString());
-                list.add(r);
+                Gson gson = new Gson();
+                Result result = gson.fromJson(s, Result.class);
+                WeatherIfoBean weatherIfoBean = new WeatherIfoBean();
+                weatherIfoBean.setCode(result.getResults().get(0).getNow().getCode());
+                weatherIfoBean.setPosition(cityName);
+                weatherIfoBean.setTemperature(result.getResults().get(0).getNow().getTemperature());
+                Log.d("xyz",result.getResults().get(0).getNow().getCode()+result.getResults().get(0).getNow().getTemperature()+"");
+                new WeatherIfoBeanDB().saveWeatherIfoBean(weatherIfoBean);
+                iMainView.updateWeather(weatherIfoBean);
             }
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-
+                Log.d("xyz",ex.toString());
             }
 
             @Override
             public void onCancelled(CancelledException cex) {
-
+                Log.d("xyz",cex.toString());
             }
 
             @Override
@@ -57,34 +58,23 @@ public class MainPresenter{
 
             }
         });
-        return list.get(0);
     }
     public String requestLocalPosition(){
         String localPosition = null;
-        localPosition = "广州";
+        localPosition = "guangzhou";
         //获取当地地名功能未实现
         return localPosition;
     }
-    public Map<String,Result> initWeatherIfo(){
-        Map<String,Result> resultMap = new HashMap<String,Result>();
-        Result result = null;
+    public void initWeatherIfo(){
         localPositionDB = new LocalPositionDB();
         List<UserPosition> list = localPositionDB.requestUserPositionData();    //查询数据库检查是否有用户保存的地理信息
         if (list.isEmpty()){    //如果没有,自动定位用户此时的地理位置
             String localPosition = requestLocalPosition();
-            result = requestWeatherData(localPosition);
-            Log.d("xyz",localPosition);
-            resultMap.put(localPosition,result);    //将自动定位地理信息和天气结果装进map里
-            Log.d("xyz",localPosition);
-            //完善:将定位到的地理位置存入数据库
-        }else {     //如果有,读取用户保存地理信息列表,通过for循环将地理信息和天气结果装进map里返回
-            for (UserPosition position : list){
-                result = requestWeatherData(position.getPosition());
-                resultMap.put(position.getPosition(),result);
-                result = null;
-            }
+            Log.d("xyz","is empty" + localPosition);
+            requestWeatherData(localPosition);
         }
-        return resultMap;
+
+
     }
 
 }
