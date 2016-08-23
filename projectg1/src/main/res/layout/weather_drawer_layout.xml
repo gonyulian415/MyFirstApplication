@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:id="@+id/weather_drawer">
 
-    <include layout="@layout/scrollview_layout"/>
+    <include layout="@layout/topbarandscroll_layout"/>
     <!--主布局scrollview写在这里-->
 
     <LinearLayout
