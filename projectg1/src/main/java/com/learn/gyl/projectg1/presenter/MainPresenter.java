@@ -13,6 +13,8 @@ import com.learn.gyl.projectg1.view.IMainView;
 
 import org.xutils.common.Callback;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -61,8 +63,9 @@ public class MainPresenter{
     }
     public String requestLocalPosition(){
         String localPosition = null;
-        localPosition = "guangzhou";
+        localPosition = "广州";
         //获取当地地名功能未实现
+        localPosition = URLEncoder.encode(localPosition);
         return localPosition;
     }
     public void initWeatherIfo(){
