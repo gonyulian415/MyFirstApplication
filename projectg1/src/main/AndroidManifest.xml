@@ -22,6 +22,10 @@
         </activity>
         <activity android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".CitySelectActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".CitySelectedActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

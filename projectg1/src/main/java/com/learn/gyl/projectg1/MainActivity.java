@@ -55,6 +55,8 @@ public class MainActivity extends BaseActivity implements IMainView {
     private ImageView iv1;              //主界面天气四个大字
     @ViewInject(R.id.weather_main_bg1)
     private ImageView iv2;              //主界面天气背景图
+    @ViewInject(R.id.drawer_fab)
+    private FloatingActionButton fab;
     private TestPresenter testPresenter;
     private MainPresenter mainPresenter = new MainPresenter(this);
     private WeatherIfoBean weatherIfoBean;
@@ -77,11 +79,12 @@ public class MainActivity extends BaseActivity implements IMainView {
     }
 
     @Event(value = {R.id.drawer_fab})
-    public void mainClick(View view){
+    private void clickEvent(View view){
         switch (view.getId()){
             case R.id.drawer_fab:
-                Intent intent = new Intent(this,CitySelectActivity.class);
+                Intent intent = new Intent(MainActivity.this,CitySelectActivity.class);
                 startActivity(intent);
+                break;
         }
     }
 }

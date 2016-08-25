@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class CityDB {
     private DbManager dbManager;
+    private List<City> cityList;
 
     public CityDB(){
         dbManager = DatabaseOpenHelper.getInstance();
@@ -27,6 +28,18 @@ public class CityDB {
         } catch (DbException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<City> loadCity(String provinceName){
+        try {
+            cityList = dbManager.selector(City.class).where("provinceName","=",provinceName).findAll();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        if (cityList == null){
+            cityList = new ArrayList<City>();
+        }
+        return cityList;
     }
 
 }

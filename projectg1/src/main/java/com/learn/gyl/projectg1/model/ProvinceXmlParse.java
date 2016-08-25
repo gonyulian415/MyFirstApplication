@@ -47,6 +47,7 @@ public class ProvinceXmlParse {
                             if(xmlPullParser.getAttributeValue(0)!=null) {
                                 city.setProvinceName(xmlPullParser.getAttributeValue(0));
                                 province.setProvinceName(xmlPullParser.getAttributeValue(0));
+                                provinceDB.saveProvince(province);
                             }
                         }
                         while ("item".equals(xmlPullParser.getName())){
@@ -54,7 +55,7 @@ public class ProvinceXmlParse {
                             if (xmlPullParser.getText()!=null){
                                 city.setCityName(xmlPullParser.getText());
                                 cityDB.saveCity(city);
-                                provinceDB.saveProvince(province);
+                                //provinceDB.saveProvince(province);
                                 list.add(city);
                             }
                         }
