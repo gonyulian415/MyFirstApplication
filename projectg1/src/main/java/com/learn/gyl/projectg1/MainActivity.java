@@ -39,6 +39,8 @@ import org.xutils.x;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,8 +71,17 @@ public class MainActivity extends BaseActivity implements IMainView {
     @Override
     public void updateWeather(WeatherIfoBean weatherIfoBean) {
         WeatherIfo weatherIfo = WeatherParseUtil.weatherParse(Integer.parseInt(weatherIfoBean.getCode()));
-        tv1.setText(weatherIfoBean.getPosition());
+        tv1.setText(URLDecoder.decode(weatherIfoBean.getPosition()));
         iv1.setImageResource(weatherIfo.getMian_text());
         iv2.setImageResource(weatherIfo.getMain_bg());
+    }
+
+    @Event(value = {R.id.drawer_fab})
+    public void mainClick(View view){
+        switch (view.getId()){
+            case R.id.drawer_fab:
+                Intent intent = new Intent(this,CitySelectActivity.class);
+                startActivity(intent);
+        }
     }
 }
