@@ -40,9 +40,10 @@ public class MainPresenter{
                 weatherIfoBean.setCode(result.getResults().get(0).getNow().getCode());
                 weatherIfoBean.setPosition(cityName);
                 weatherIfoBean.setTemperature(result.getResults().get(0).getNow().getTemperature());
-                Log.d("xyz",result.getResults().get(0).getNow().getCode()+result.getResults().get(0).getNow().getTemperature()+"");
+                Log.d("xyz", result.getResults().get(0).getNow().getCode() + result.getResults().get(0).getNow().getTemperature() + "");
                 new WeatherIfoBeanDB().saveWeatherIfoBean(weatherIfoBean);
                 iMainView.updateWeather(weatherIfoBean);
+                iMainView.updateRightListView();
             }
 
             @Override
@@ -76,8 +77,7 @@ public class MainPresenter{
             Log.d("xyz","is empty" + localPosition);
             requestWeatherData(localPosition);
         }
-
-
     }
+
 
 }

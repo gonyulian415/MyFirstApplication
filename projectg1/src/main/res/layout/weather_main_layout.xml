@@ -7,7 +7,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/weather_main_bg1"
         android:scaleType="centerCrop"
-        android:src="@drawable/rainy"/>
+        android:src="@drawable/sunny"/>
 
     <include layout="@layout/weather_drawer_layout"/>
     <!--drawerlayout写在这里-->

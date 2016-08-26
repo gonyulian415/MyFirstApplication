@@ -14,10 +14,17 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         Log.d("CurrentActivity",getClass().getSimpleName());
         //获取当前界面对应的Activity的名字
+        ActivityController.addActivity(this);
     }
 
     @Override
     public void onClick(View v) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityController.removeAcitivity(this);
     }
 }

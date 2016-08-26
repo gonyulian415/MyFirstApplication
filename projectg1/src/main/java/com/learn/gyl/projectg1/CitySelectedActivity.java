@@ -3,6 +3,8 @@ package com.learn.gyl.projectg1;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -16,6 +18,8 @@ import com.learn.gyl.projectg1.view.ICitySelectView;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -38,6 +42,19 @@ public class CitySelectedActivity extends BaseActivity implements ICitySelectVie
         String provinceName = intent.getStringExtra("province");
         cityList = citySelectPresenter.loadCityData(provinceName);
         citySelectPresenter.updateView();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                City city = cityList.get(position);
+                Intent renturnMain = new Intent(CitySelectedActivity.this,MainActivity.class);
+                try {
+                    renturnMain.putExtra("cityName", URLEncoder.encode(city.getCityName(),"UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                startActivity(renturnMain);
+            }
+        });
     }
 
     @Override

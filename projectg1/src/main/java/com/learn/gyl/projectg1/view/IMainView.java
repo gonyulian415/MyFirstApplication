@@ -10,4 +10,5 @@ import java.util.Map;
  */
 public interface IMainView {
     void updateWeather(WeatherIfoBean weatherIfoBean);
+    void updateRightListView();
 }

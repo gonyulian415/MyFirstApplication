@@ -19,7 +19,9 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.learn.gyl.projectg1.bean.City;
@@ -41,6 +43,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,9 +60,14 @@ public class MainActivity extends BaseActivity implements IMainView {
     private ImageView iv2;              //主界面天气背景图
     @ViewInject(R.id.drawer_fab)
     private FloatingActionButton fab;
+    @ViewInject(R.id.right_drawer_listview)
+    private ListView rightListView;
     private TestPresenter testPresenter;
     private MainPresenter mainPresenter = new MainPresenter(this);
     private WeatherIfoBean weatherIfoBean;
+    private ArrayAdapter<String> rightAdapter;
+    private List<String> rightList = new ArrayList<String>();;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +75,15 @@ public class MainActivity extends BaseActivity implements IMainView {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         x.view().inject(this);
         drawerLayout.setScrimColor(Color.TRANSPARENT);
-        mainPresenter.initWeatherIfo();
+        Intent intent = getIntent();
+        if (intent.getStringExtra("cityName") == null){
+            Log.d("xyz","intent is null");
+            mainPresenter.initWeatherIfo();
+        }else {
+            String cityName = intent.getStringExtra("cityName");
+            rightList.add(cityName);
+            mainPresenter.requestWeatherData(cityName);
+        }
     }
 
     @Override
@@ -78,6 +94,12 @@ public class MainActivity extends BaseActivity implements IMainView {
         iv2.setImageResource(weatherIfo.getMain_bg());
     }
 
+    @Override
+    public void updateRightListView() {
+        rightAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,rightList);
+        rightListView.setAdapter(rightAdapter);
+    }
+
     @Event(value = {R.id.drawer_fab})
     private void clickEvent(View view){
         switch (view.getId()){
@@ -86,5 +108,12 @@ public class MainActivity extends BaseActivity implements IMainView {
                 startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ActivityController.finishAll();
+        Log.d("xyz","back");
     }
 }
