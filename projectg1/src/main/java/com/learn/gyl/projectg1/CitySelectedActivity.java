@@ -19,6 +19,7 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -46,9 +47,9 @@ public class CitySelectedActivity extends BaseActivity implements ICitySelectVie
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 City city = cityList.get(position);
-                Intent renturnMain = new Intent(CitySelectedActivity.this,MainActivity.class);
+                Intent renturnMain = new Intent(CitySelectedActivity.this, MainActivity.class);
                 try {
-                    renturnMain.putExtra("cityName", URLEncoder.encode(city.getCityName(),"UTF-8"));
+                    renturnMain.putExtra("cityName", URLEncoder.encode(city.getCityName(), "UTF-8"));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }

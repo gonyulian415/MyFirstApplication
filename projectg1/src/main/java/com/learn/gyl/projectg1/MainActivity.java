@@ -81,7 +81,11 @@ public class MainActivity extends BaseActivity implements IMainView {
             mainPresenter.initWeatherIfo();
         }else {
             String cityName = intent.getStringExtra("cityName");
-            rightList.add(cityName);
+            try {
+                rightList.add(URLDecoder.decode(cityName,"UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             mainPresenter.requestWeatherData(cityName);
         }
     }
