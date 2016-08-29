@@ -66,7 +66,6 @@ public class MainActivity extends BaseActivity implements IMainView {
     private MainPresenter mainPresenter = new MainPresenter(this);
     private WeatherIfoBean weatherIfoBean;
     private ArrayAdapter<String> rightAdapter;
-    private List<String> rightList = new ArrayList<String>();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +80,6 @@ public class MainActivity extends BaseActivity implements IMainView {
             mainPresenter.initWeatherIfo();
         }else {
             String cityName = intent.getStringExtra("cityName");
-            try {
-                rightList.add(URLDecoder.decode(cityName,"UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
             mainPresenter.requestWeatherData(cityName);
         }
     }
@@ -99,8 +93,8 @@ public class MainActivity extends BaseActivity implements IMainView {
     }
 
     @Override
-    public void updateRightListView() {
-        rightAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,rightList);
+    public void updateRightListView(List<String> list) {
+        rightAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,list);
         rightListView.setAdapter(rightAdapter);
     }
 

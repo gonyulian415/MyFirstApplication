@@ -14,7 +14,9 @@ import com.learn.gyl.projectg1.view.IMainView;
 import org.xutils.common.Callback;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +36,8 @@ public class MainPresenter{
         XHttpUtils.requestData(url.toString(), new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String s) {
+                List<String> list = new ArrayList<String>();
+                List<WeatherIfoBean> list1 = null;
                 Gson gson = new Gson();
                 Result result = gson.fromJson(s, Result.class);
                 WeatherIfoBean weatherIfoBean = new WeatherIfoBean();
@@ -41,9 +45,22 @@ public class MainPresenter{
                 weatherIfoBean.setPosition(cityName);
                 weatherIfoBean.setTemperature(result.getResults().get(0).getNow().getTemperature());
                 Log.d("xyz", result.getResults().get(0).getNow().getCode() + result.getResults().get(0).getNow().getTemperature() + "");
-                new WeatherIfoBeanDB().saveWeatherIfoBean(weatherIfoBean);
+                if(!new WeatherIfoBeanDB().queryExsist(cityName)) {
+                    new WeatherIfoBeanDB().saveWeatherIfoBean(weatherIfoBean);
+                }
+                list1 = new WeatherIfoBeanDB().loadWeatherIfoBean();
+                if (list1 == null){
+                    list1 = new ArrayList<WeatherIfoBean>();
+                }
+                for (WeatherIfoBean w : list1){
+                    try {
+                        list.add(URLDecoder.decode(w.getPosition(),"UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                }
                 iMainView.updateWeather(weatherIfoBean);
-                iMainView.updateRightListView();
+                iMainView.updateRightListView(list);
             }
 
             @Override

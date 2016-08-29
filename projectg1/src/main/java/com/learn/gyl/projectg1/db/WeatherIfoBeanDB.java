@@ -1,8 +1,11 @@
 package com.learn.gyl.projectg1.db;
 
+import android.util.Log;
+
 import com.learn.gyl.projectg1.bean.WeatherIfoBean;
 
 import org.xutils.DbManager;
+import org.xutils.db.sqlite.WhereBuilder;
 import org.xutils.ex.DbException;
 
 import java.util.List;
@@ -32,5 +35,20 @@ public class WeatherIfoBeanDB {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public boolean queryExsist(String cityName){
+        boolean flag = true;
+        List<WeatherIfoBean> list = null;
+        try {
+            list = dbManager.selector(WeatherIfoBean.class).where("position","=",cityName).findAll();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        if (list.size() == 0){
+            flag = false;//如果城市还没存过,flag设为false
+            Log.d("xyz","没存过");
+        }
+        return flag;
     }
 }

@@ -3,6 +3,7 @@ package com.learn.gyl.projectg1.view;
 import com.learn.gyl.projectg1.bean.Result;
 import com.learn.gyl.projectg1.bean.WeatherIfoBean;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,5 +11,5 @@ import java.util.Map;
  */
 public interface IMainView {
     void updateWeather(WeatherIfoBean weatherIfoBean);
-    void updateRightListView();
+    void updateRightListView(List<String> list);
 }
