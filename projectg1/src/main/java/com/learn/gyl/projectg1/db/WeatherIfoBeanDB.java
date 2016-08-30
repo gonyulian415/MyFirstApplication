@@ -41,7 +41,7 @@ public class WeatherIfoBeanDB {
         boolean flag = true;
         List<WeatherIfoBean> list = null;
         try {
-            list = dbManager.selector(WeatherIfoBean.class).where("position","=",cityName).findAll();
+            list = dbManager.selector(WeatherIfoBean.class).where("position", "=", cityName).findAll();
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -50,5 +50,14 @@ public class WeatherIfoBeanDB {
             Log.d("xyz","没存过");
         }
         return flag;
+    }
+
+    public void deleteCity(String cityName){
+        WhereBuilder whereBuilder = WhereBuilder.b("position","=",cityName);
+        try {
+            dbManager.delete(WeatherIfoBean.class,whereBuilder);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 }

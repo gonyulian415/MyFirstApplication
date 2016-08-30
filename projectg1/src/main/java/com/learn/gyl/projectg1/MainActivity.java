@@ -1,5 +1,7 @@
 package com.learn.gyl.projectg1;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -22,6 +24,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,6 +32,7 @@ import com.learn.gyl.projectg1.bean.City;
 import com.learn.gyl.projectg1.bean.Result;
 import com.learn.gyl.projectg1.bean.WeatherIfo;
 import com.learn.gyl.projectg1.bean.WeatherIfoBean;
+import com.learn.gyl.projectg1.db.WeatherIfoBeanDB;
 import com.learn.gyl.projectg1.model.ProvinceXmlParse;
 import com.learn.gyl.projectg1.presenter.MainPresenter;
 import com.learn.gyl.projectg1.presenter.TestPresenter;
@@ -64,6 +68,8 @@ public class MainActivity extends BaseActivity implements IMainView {
     private FloatingActionButton fab;
     @ViewInject(R.id.right_drawer_listview)
     private ListView rightListView;
+    @ViewInject(R.id.weather_right_drawer)
+    private LinearLayout right_drawer;
     private TestPresenter testPresenter;
     private MainPresenter mainPresenter = new MainPresenter(this);
     private WeatherIfoBean weatherIfoBean;
@@ -91,6 +97,32 @@ public class MainActivity extends BaseActivity implements IMainView {
                 mainPresenter.requestWeatherData(cityName);
             }
         });
+        rightListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+                alert.setTitle("提示");
+                alert.setMessage("确定删除该城市?");
+                alert.setCancelable(false);
+                alert.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String name = list.get(position);
+                        list.remove(position);
+                        new WeatherIfoBeanDB().deleteCity(name);
+                        rightAdapter.notifyDataSetChanged();
+                    }
+                });
+                alert.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //此处留空默认点击关闭提示框
+                    }
+                });
+                alert.show();
+                return false;
+            }
+        });
         if (intent.getStringExtra("cityName") == null){
             Log.d("xyz","intent is null");
             mainPresenter.initWeatherIfo();
@@ -112,7 +144,7 @@ public class MainActivity extends BaseActivity implements IMainView {
     @Override
     public void updateRightListView(List<String> list) {
         this.list = list;
-        rightAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,list);
+        rightAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,this.list);
         rightListView.setAdapter(rightAdapter);
     }
 
@@ -129,7 +161,10 @@ public class MainActivity extends BaseActivity implements IMainView {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        ActivityController.finishAll();
-        Log.d("xyz","back");
+        if (!drawerLayout.isDrawerOpen(right_drawer)) {
+            ActivityController.finishAll();
+        }
+        drawerLayout.closeDrawers();//drawer打开的情况下按back键关闭drawer;drawer关闭的情况下按back退出app
+        Log.d("xyz", "back");
     }
 }

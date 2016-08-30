@@ -27,4 +27,9 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
         ActivityController.removeAcitivity(this);
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }
