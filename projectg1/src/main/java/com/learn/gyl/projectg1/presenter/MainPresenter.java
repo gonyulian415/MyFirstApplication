@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -25,6 +26,9 @@ import java.util.List;
 public class MainPresenter{
     private IMainView iMainView;
     private LocalPositionDB localPositionDB;
+    private String mMonth;
+    private String mDay;
+    private String mWeek;
 
     public MainPresenter(IMainView iMainView) {
         this.iMainView = iMainView;
@@ -44,7 +48,7 @@ public class MainPresenter{
                 weatherIfoBean.setCode(result.getResults().get(0).getNow().getCode());
                 weatherIfoBean.setPosition(cityName);
                 weatherIfoBean.setTemperature(result.getResults().get(0).getNow().getTemperature());
-                Log.d("xyz", result.getResults().get(0).getNow().getCode() + result.getResults().get(0).getNow().getTemperature() + "");
+                Log.d("xyz", "code:" + result.getResults().get(0).getNow().getCode() + "temp:" + result.getResults().get(0).getNow().getTemperature() + "");
                 if(!new WeatherIfoBeanDB().queryExsist(cityName)) {
                     new WeatherIfoBeanDB().saveWeatherIfoBean(weatherIfoBean);
                 }
@@ -91,10 +95,29 @@ public class MainPresenter{
         List<UserPosition> list = localPositionDB.requestUserPositionData();    //查询数据库检查是否有用户保存的地理信息
         if (list.isEmpty()){    //如果没有,自动定位用户此时的地理位置
             String localPosition = requestLocalPosition();
-            Log.d("xyz","is empty" + localPosition);
-            requestWeatherData(localPosition);
+            Log.d("xyz", "is empty" + localPosition);
+            requestWeatherData(localPosition);//查天气
+            iMainView.updateDate(aquireData());
         }
     }
 
+    public String aquireData(){
+        String date = null;
+        Calendar calendar = Calendar.getInstance();
+        mMonth = String.valueOf(calendar.get(Calendar.MONTH)+1);
+        mDay = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+        mWeek = String.valueOf(calendar.get(Calendar.DAY_OF_WEEK));
+        switch (mWeek){
+            case "1":mWeek = "日";break;
+            case "2":mWeek = "一";break;
+            case "3":mWeek = "二";break;
+            case "4":mWeek = "三";break;
+            case "5":mWeek = "四";break;
+            case "6":mWeek = "五";break;
+            case "7":mWeek = "六";break;
+        }
+        date = mMonth + "." + mDay + "/" + "周" + mWeek;
+        return date;
+    }
 
 }

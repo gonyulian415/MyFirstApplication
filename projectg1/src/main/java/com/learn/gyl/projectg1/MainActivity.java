@@ -70,6 +70,8 @@ public class MainActivity extends BaseActivity implements IMainView {
     private ListView rightListView;
     @ViewInject(R.id.weather_right_drawer)
     private LinearLayout right_drawer;
+    @ViewInject(R.id.weather_date)
+    private TextView dateTextView;
     private TestPresenter testPresenter;
     private MainPresenter mainPresenter = new MainPresenter(this);
     private WeatherIfoBean weatherIfoBean;
@@ -90,7 +92,7 @@ public class MainActivity extends BaseActivity implements IMainView {
                 String cityName = null;
                 cityName = list.get(position);
                 try {
-                    cityName = URLEncoder.encode(cityName,"UTF-8");
+                    cityName = URLEncoder.encode(cityName, "UTF-8");
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -109,7 +111,11 @@ public class MainActivity extends BaseActivity implements IMainView {
                     public void onClick(DialogInterface dialog, int which) {
                         String name = list.get(position);
                         list.remove(position);
-                        new WeatherIfoBeanDB().deleteCity(name);
+                        try {
+                            new WeatherIfoBeanDB().deleteCity(URLEncoder.encode(name,"UTF-8"));
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
                         rightAdapter.notifyDataSetChanged();
                     }
                 });
@@ -146,6 +152,11 @@ public class MainActivity extends BaseActivity implements IMainView {
         this.list = list;
         rightAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,this.list);
         rightListView.setAdapter(rightAdapter);
+    }
+
+    @Override
+    public void updateDate(String date) {
+        dateTextView.setText(date);
     }
 
     @Event(value = {R.id.drawer_fab})

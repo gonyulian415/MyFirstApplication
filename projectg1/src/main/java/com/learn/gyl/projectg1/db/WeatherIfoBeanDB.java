@@ -45,9 +45,12 @@ public class WeatherIfoBeanDB {
         } catch (DbException e) {
             e.printStackTrace();
         }
-        if (list.size() == 0){
+        if (list == null){
             flag = false;//如果城市还没存过,flag设为false
             Log.d("xyz","没存过");
+        }else if(list.size() == 0){
+            flag = false;
+            Log.d("xyz","真没存过");
         }
         return flag;
     }
