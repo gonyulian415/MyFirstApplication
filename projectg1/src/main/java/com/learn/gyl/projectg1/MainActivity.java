@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -43,6 +44,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +68,7 @@ public class MainActivity extends BaseActivity implements IMainView {
     private MainPresenter mainPresenter = new MainPresenter(this);
     private WeatherIfoBean weatherIfoBean;
     private ArrayAdapter<String> rightAdapter;
+    private List<String> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,19 @@ public class MainActivity extends BaseActivity implements IMainView {
         x.view().inject(this);
         drawerLayout.setScrimColor(Color.TRANSPARENT);
         Intent intent = getIntent();
+        rightListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String cityName = null;
+                cityName = list.get(position);
+                try {
+                    cityName = URLEncoder.encode(cityName,"UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                mainPresenter.requestWeatherData(cityName);
+            }
+        });
         if (intent.getStringExtra("cityName") == null){
             Log.d("xyz","intent is null");
             mainPresenter.initWeatherIfo();
@@ -90,10 +106,12 @@ public class MainActivity extends BaseActivity implements IMainView {
         tv1.setText(URLDecoder.decode(weatherIfoBean.getPosition()));
         iv1.setImageResource(weatherIfo.getMian_text());
         iv2.setImageResource(weatherIfo.getMain_bg());
+        drawerLayout.closeDrawers();
     }
 
     @Override
     public void updateRightListView(List<String> list) {
+        this.list = list;
         rightAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,list);
         rightListView.setAdapter(rightAdapter);
     }

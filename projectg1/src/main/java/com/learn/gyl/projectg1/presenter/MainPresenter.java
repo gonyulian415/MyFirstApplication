@@ -24,13 +24,13 @@ import java.util.List;
  */
 public class MainPresenter{
     private IMainView iMainView;
-    private StringBuilder url = new StringBuilder("https://api.thinkpage.cn/v3/weather/now.json?key=pqfsoeh1da1fvxjf&language=zh-Hans&unit=c");
     private LocalPositionDB localPositionDB;
 
     public MainPresenter(IMainView iMainView) {
         this.iMainView = iMainView;
     }
     public void requestWeatherData(final String cityName){
+        StringBuilder url = new StringBuilder("https://api.thinkpage.cn/v3/weather/now.json?key=pqfsoeh1da1fvxjf&language=zh-Hans&unit=c");
         url.append("&location=" + cityName);
         Log.d("xyz",url.toString());
         XHttpUtils.requestData(url.toString(), new Callback.CommonCallback<String>() {
