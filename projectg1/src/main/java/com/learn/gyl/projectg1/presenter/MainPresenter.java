@@ -65,6 +65,8 @@ public class MainPresenter{
                 }
                 iMainView.updateWeather(weatherIfoBean);
                 iMainView.updateRightListView(list);
+                iMainView.closeSwipe();
+                iMainView.updateDate(aquireData());
             }
 
             @Override
@@ -97,7 +99,6 @@ public class MainPresenter{
             String localPosition = requestLocalPosition();
             Log.d("xyz", "is empty" + localPosition);
             requestWeatherData(localPosition);//查天气
-            iMainView.updateDate(aquireData());
         }
     }
 

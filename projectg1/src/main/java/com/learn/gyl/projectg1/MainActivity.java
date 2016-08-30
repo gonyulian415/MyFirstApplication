@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageView;
@@ -72,6 +73,8 @@ public class MainActivity extends BaseActivity implements IMainView {
     private LinearLayout right_drawer;
     @ViewInject(R.id.weather_date)
     private TextView dateTextView;
+    @ViewInject(R.id.weather_swipe)
+    private SwipeRefreshLayout swipeRefreshLayout;
     private TestPresenter testPresenter;
     private MainPresenter mainPresenter = new MainPresenter(this);
     private WeatherIfoBean weatherIfoBean;
@@ -84,7 +87,7 @@ public class MainActivity extends BaseActivity implements IMainView {
         setContentView(R.layout.weather_main_layout);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         x.view().inject(this);
-        drawerLayout.setScrimColor(Color.TRANSPARENT);
+        drawerLayout.setScrimColor(Color.TRANSPARENT);//取消抽屉阴影
         Intent intent = getIntent();
         rightListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -112,7 +115,7 @@ public class MainActivity extends BaseActivity implements IMainView {
                         String name = list.get(position);
                         list.remove(position);
                         try {
-                            new WeatherIfoBeanDB().deleteCity(URLEncoder.encode(name,"UTF-8"));
+                            new WeatherIfoBeanDB().deleteCity(URLEncoder.encode(name, "UTF-8"));
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
@@ -127,6 +130,16 @@ public class MainActivity extends BaseActivity implements IMainView {
                 });
                 alert.show();
                 return false;
+            }
+        });
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                try {
+                    mainPresenter.requestWeatherData(URLEncoder.encode(tv1.getText().toString(),"UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
             }
         });
         if (intent.getStringExtra("cityName") == null){
@@ -149,6 +162,10 @@ public class MainActivity extends BaseActivity implements IMainView {
 
     @Override
     public void updateRightListView(List<String> list) {
+//        String temp = list.get(list.size()-1);
+//        list.remove(list.size()-1);
+//        list.add(0, temp);
+//        Log.d("xyz",temp);
         this.list = list;
         rightAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,this.list);
         rightListView.setAdapter(rightAdapter);
@@ -157,6 +174,13 @@ public class MainActivity extends BaseActivity implements IMainView {
     @Override
     public void updateDate(String date) {
         dateTextView.setText(date);
+    }
+
+    @Override
+    public void closeSwipe() {
+        if (swipeRefreshLayout.isRefreshing()){
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Event(value = {R.id.drawer_fab})
