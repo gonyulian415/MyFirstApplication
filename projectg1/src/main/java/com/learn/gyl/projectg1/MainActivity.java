@@ -16,6 +16,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -183,12 +184,15 @@ public class MainActivity extends BaseActivity implements IMainView {
         }
     }
 
-    @Event(value = {R.id.drawer_fab})
+    @Event(value = {R.id.drawer_fab,R.id.weatherPosition})
     private void clickEvent(View view){
         switch (view.getId()){
             case R.id.drawer_fab:
                 Intent intent = new Intent(MainActivity.this,CitySelectActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.weatherPosition:
+                drawerLayout.openDrawer(Gravity.RIGHT);
                 break;
         }
     }
