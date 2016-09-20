@@ -54,6 +54,8 @@ public class CitySelectedActivity extends BaseActivity implements ICitySelectVie
                     e.printStackTrace();
                 }
                 startActivity(renturnMain);
+
+                finish();
             }
         });
     }

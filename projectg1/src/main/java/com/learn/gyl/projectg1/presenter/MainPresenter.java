@@ -25,7 +25,6 @@ import java.util.List;
  */
 public class MainPresenter{
     private IMainView iMainView;
-    private LocalPositionDB localPositionDB;
     private String mMonth;
     private String mDay;
     private String mWeek;
@@ -48,9 +47,12 @@ public class MainPresenter{
                 weatherIfoBean.setCode(result.getResults().get(0).getNow().getCode());
                 weatherIfoBean.setPosition(cityName);
                 weatherIfoBean.setTemperature(result.getResults().get(0).getNow().getTemperature());
+                weatherIfoBean.setWeathertext(result.getResults().get(0).getNow().getText());
+                weatherIfoBean.setUpdatetime(result.getResults().get(0).getLast_update());
                 Log.d("xyz", "code:" + result.getResults().get(0).getNow().getCode() + "temp:" + result.getResults().get(0).getNow().getTemperature() + "");
                 if(!new WeatherIfoBeanDB().queryExsist(cityName)) {
                     new WeatherIfoBeanDB().saveWeatherIfoBean(weatherIfoBean);
+                    Log.d("xyz",cityName + "weatherIfoBean has saved!");
                 }
                 list1 = new WeatherIfoBeanDB().loadWeatherIfoBean();
                 if (list1 == null){
@@ -59,6 +61,7 @@ public class MainPresenter{
                 for (WeatherIfoBean w : list1){
                     try {
                         list.add(URLDecoder.decode(w.getPosition(),"UTF-8"));
+                        Log.d("xyz",URLDecoder.decode(w.getPosition(),"UTF-8"));
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
@@ -93,12 +96,14 @@ public class MainPresenter{
         return localPosition;
     }
     public void initWeatherIfo(){
-        localPositionDB = new LocalPositionDB();
-        List<UserPosition> list = localPositionDB.requestUserPositionData();    //查询数据库检查是否有用户保存的地理信息
-        if (list.isEmpty()){    //如果没有,自动定位用户此时的地理位置
+        WeatherIfoBeanDB weatherIfoBeanDB = new WeatherIfoBeanDB();
+        List<WeatherIfoBean> list = weatherIfoBeanDB.loadWeatherIfoBean();    //查询数据库检查是否有用户保存的地理信息
+        if ((list == null) || list.isEmpty()){    //如果没有,自动定位用户此时的地理位置
             String localPosition = requestLocalPosition();
             Log.d("xyz", "is empty" + localPosition);
             requestWeatherData(localPosition);//查天气
+        }else {
+            requestWeatherData(list.get(0).getPosition());
         }
     }
 

@@ -20,6 +20,7 @@ import java.util.List;
 
 /**
  * Created by admin on 2016/8/25.
+ * 省份选择Activity
  */
 public class CitySelectActivity extends BaseActivity implements ICitySelectView{
     @ViewInject(R.id.city_select_listview)

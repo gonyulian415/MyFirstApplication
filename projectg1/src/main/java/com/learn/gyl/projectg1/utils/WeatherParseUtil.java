@@ -21,14 +21,14 @@ public class WeatherParseUtil {
             case 8:weatherIfo = new WeatherIfo();weatherIfo.setMain_bg(R.drawable.cloudy);weatherIfo.setMian_text(R.drawable.qjdy_normal);break;
             case 9:weatherIfo = new WeatherIfo();weatherIfo.setMain_bg(R.drawable.dusty);weatherIfo.setMian_text(R.drawable.yymb_normal);break;
             case 10:weatherIfo = new WeatherIfo();weatherIfo.setMain_bg(R.drawable.rainy);weatherIfo.setMian_text(R.drawable.oyzy_normal);break;
-            case 11:weatherIfo = new WeatherIfo();weatherIfo.setMain_bg(R.drawable.rainy);weatherIfo.setMian_text(R.drawable.thunder);break;
+            case 11:weatherIfo = new WeatherIfo();weatherIfo.setMain_bg(R.drawable.rainy);weatherIfo.setMian_text(R.drawable.dsly_normal);break;
             case 12:weatherIfo = new WeatherIfo();weatherIfo.setMain_bg(R.drawable.rainy);weatherIfo.setMian_text(R.drawable.zybb_normal);break;
             case 13:weatherIfo = new WeatherIfo();weatherIfo.setMain_bg(R.drawable.rainy);weatherIfo.setMian_text(R.drawable.xymm_normal);break;
             case 14:weatherIfo = new WeatherIfo();weatherIfo.setMain_bg(R.drawable.lightrain3);weatherIfo.setMian_text(R.drawable.zyjl_normal);break;
             case 15:weatherIfo = new WeatherIfo();weatherIfo.setMain_bg(R.drawable.lightrain3);weatherIfo.setMian_text(R.drawable.dyqp_normal);break;
             case 16:
             case 17:
-            case 18:weatherIfo = new WeatherIfo();weatherIfo.setMain_bg(R.drawable.lightrain3);weatherIfo.setMian_text(R.drawable.bylx_normal);break;
+            case 18:weatherIfo = new WeatherIfo();weatherIfo.setMain_bg(R.drawable.thunder);weatherIfo.setMian_text(R.drawable.bylx_normal);break;
             case 19:weatherIfo = new WeatherIfo();weatherIfo.setMain_bg(R.drawable.rainy);weatherIfo.setMian_text(R.drawable.dyjl_normal);break;
             case 20:weatherIfo = new WeatherIfo();weatherIfo.setMain_bg(R.drawable.snow);weatherIfo.setMian_text(R.drawable.xyjx_normal);break;
             case 21:weatherIfo = new WeatherIfo();weatherIfo.setMain_bg(R.drawable.snow);weatherIfo.setMian_text(R.drawable.oyjx_normal);break;

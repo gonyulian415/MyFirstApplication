@@ -30,4 +30,12 @@ public class LocalPositionDB {
         }
         return list;
     }
+
+    public void saveUserPosition(UserPosition userPosition){
+        try {
+            dbManager.save(userPosition);
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
 }

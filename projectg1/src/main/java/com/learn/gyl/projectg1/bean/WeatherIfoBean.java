@@ -16,6 +16,26 @@ public class WeatherIfoBean {
     private String temperature;
     @Column(name = "code")
     private String code;
+    @Column(name = "weathertext")
+    private String weathertext;
+    @Column(name = "updatetime")
+    private String updatetime;
+
+    public String getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(String updatetime) {
+        this.updatetime = updatetime;
+    }
+
+    public String getWeathertext() {
+        return weathertext;
+    }
+
+    public void setWeathertext(String weathertext) {
+        this.weathertext = weathertext;
+    }
 
     public String getCode() {
         return code;

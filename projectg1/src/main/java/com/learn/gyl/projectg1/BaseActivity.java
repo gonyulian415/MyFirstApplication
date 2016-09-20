@@ -28,8 +28,4 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         ActivityController.removeAcitivity(this);
     }
 
-    @Override
-    public void onBackPressed() {
-
-    }
 }

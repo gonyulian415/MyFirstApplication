@@ -17,6 +17,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.learn.gyl.projectg1.bean.City;
 import com.learn.gyl.projectg1.bean.Result;
@@ -51,6 +53,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,11 +79,19 @@ public class MainActivity extends BaseActivity implements IMainView {
     private TextView dateTextView;
     @ViewInject(R.id.weather_swipe)
     private SwipeRefreshLayout swipeRefreshLayout;
+    @ViewInject(R.id.todayweathertext)
+    private TextView weatherText;
+    @ViewInject(R.id.todaytemperature)
+    private TextView temperature;
+    @ViewInject(R.id.lastupdatetime)
+    private TextView lastUpdateTime;
     private TestPresenter testPresenter;
     private MainPresenter mainPresenter = new MainPresenter(this);
     private WeatherIfoBean weatherIfoBean;
     private ArrayAdapter<String> rightAdapter;
     private List<String> list;
+    private long exitTime = 0;
+    private String updateTime = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,9 +125,11 @@ public class MainActivity extends BaseActivity implements IMainView {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String name = list.get(position);
+                        String nextName = list.get(position + 1);
                         list.remove(position);
                         try {
                             new WeatherIfoBeanDB().deleteCity(URLEncoder.encode(name, "UTF-8"));
+                            mainPresenter.requestWeatherData(URLEncoder.encode(nextName, "UTF-8"));
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
@@ -158,6 +171,15 @@ public class MainActivity extends BaseActivity implements IMainView {
         tv1.setText(URLDecoder.decode(weatherIfoBean.getPosition()));
         iv1.setImageResource(weatherIfo.getMian_text());
         iv2.setImageResource(weatherIfo.getMain_bg());
+        weatherText.setText(weatherIfoBean.getWeathertext());
+        temperature.setText(weatherIfoBean.getTemperature() + "℃");
+//        updateTime = weatherIfoBean.getUpdatetime().split("\\+")[0];
+        lastUpdateTime.setText("最后更新于：" + new SimpleDateFormat("yyyy-MM-dd    HH:mm:ss").format(new java.util.Date()));
+        try {
+            Toast.makeText(getApplicationContext(),URLDecoder.decode(weatherIfoBean.getPosition(),"UTF-8") + weatherIfoBean.getUpdatetime().split("\\+")[0].split("T")[1] + "发布",Toast.LENGTH_SHORT).show();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         drawerLayout.closeDrawers();
     }
 
@@ -197,13 +219,28 @@ public class MainActivity extends BaseActivity implements IMainView {
         }
     }
 
+//    @Override
+//    public void onBackPressed() {
+//        if (!drawerLayout.isDrawerOpen(right_drawer)) {
+//            ActivityController.finishAll();
+//        }
+//        drawerLayout.closeDrawers();//drawer打开的情况下按back键关闭drawer;drawer关闭的情况下按back退出app
+//        Log.d("xyz", "back");
+//    }
+
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        if (!drawerLayout.isDrawerOpen(right_drawer)) {
-            ActivityController.finishAll();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && (!drawerLayout.isDrawerOpen(right_drawer))){
+            if ((System.currentTimeMillis() - exitTime) > 2000){
+                Toast.makeText(getApplicationContext(),"再按一次退出程序",Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            }else {
+                ActivityController.finishAll();
+            }
+            return true;//一定要有
         }
         drawerLayout.closeDrawers();//drawer打开的情况下按back键关闭drawer;drawer关闭的情况下按back退出app
-        Log.d("xyz", "back");
+        return true;
+        //return super.onKeyDown(keyCode, event);
     }
 }
